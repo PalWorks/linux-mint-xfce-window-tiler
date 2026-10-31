@@ -2,7 +2,7 @@
 
 Why things are the way they are. Newest last. Timestamps ISO 8601 in UTC (`+00:00`).
 
-_Last updated: 2026-10-30T20:10:41+00:00 (D15 added)._
+_Last updated: 2026-10-31T05:26:41+00:00 (D16 added)._
 
 ## D1. A custom tray, not X-Tile's own tray mode (maintainer, 2026-10-31)
 
@@ -75,7 +75,7 @@ restart. A second tile or reset replaces it; it is deleted once used.
 A one-click clean desk. It applies to every window the pop-up lists (current workspace, or
 all workspaces when that setting is on), not only ticked ones, because it is a whole-desk
 action. No confirmation dialog: it is fully undoable, and a notification says how to undo.
-It is the right-most header icon, set apart from Select all and Clear by a divider, so it
+It is the right-most header icon, set apart from Select all and Clear by extra space, so it
 is not mistaken for clearing the ticks.
 
 ## D12. Licence: AGPL 3.0 or a paid commercial licence (maintainer, 2026-10-31)
@@ -108,3 +108,12 @@ The engine reads `_GTK_FRAME_EXTENTS` with `xprop` and enlarges the X window by 
 visible part fills the slot. Verified on a GTK header bar test window (shadow 26, 26, 23,
 29): visible area landed exactly on `(960, 33, 960, 1047)`. The invisible shadow then
 overlaps the neighbouring slot, which is how every CSD-aware tiler behaves.
+
+## D16. No separator lines drawn by code (maintainer, 2026-10-31)
+
+Earlier the panel icon carried a thin divider drawn into its left edge, because every XApp
+status icon shares one panel plugin and a panel separator cannot sit between two of them.
+The maintainer prefers the panel's own separators, added in Panel Preferences, and no
+other kind of line. So the icon is drawn without one, and the pop-up header separates
+Reset all from Select all and Clear by space, not a line. Any future separator goes through
+the panel's Separator item only.

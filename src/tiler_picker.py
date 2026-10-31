@@ -114,9 +114,10 @@ class Picker(Gtk.Window):
         self.btn_clear = self._icon_button(
             "edit-clear-all-symbolic", "Clear",
             "Untick every window.", self._clear)
-        # whole-desk Reset sits apart from the per-tick pair
+        # whole-desk Reset sits apart from the per-tick pair, by space alone: no
+        # drawn separator lines anywhere (owner, 2026-10-31)
         head.pack_end(self.btn_reset, False, False, 0)
-        head.pack_end(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 2)
+        head.pack_end(Gtk.Box(), False, False, 6)
         head.pack_end(self.btn_clear, False, False, 0)
         head.pack_end(self.btn_all, False, False, 0)
         outer.pack_start(head, False, False, 0)

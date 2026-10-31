@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-10-31T05:15:42+00:00 (row 24 found and closed)._
+> _Last updated: 2026-10-31T05:26:41+00:00 (row 25 closed)._
 
 ## 0. North star: every open item, one row each
 
@@ -88,7 +88,7 @@ Priority, Size and Impact are separate columns because they answer separate ques
 
 ## 2. Next up
 
-### 2.1 Status: 0.2.4 public; every layout tried on real windows (updated 2026-10-31T05:15:42+00:00)
+### 2.1 Status: 0.2.5 public; every layout tried on real windows (updated 2026-10-31T05:26:41+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 
@@ -121,6 +121,7 @@ date and size.
 | 20 | Browser shadow overlapping a neighbour's edge | §3.1 | **Done** 2026-10-31: maintainer clicked next to Edge on all sides, nothing triggered | Was Trivial | L |
 | 23 | Overlap notice listed long, private window titles | §3.1 | **Done** 2026-10-31 | Was Trivial | L |
 | 24 | Tray segfault when a refresh lands with the menu open | §3.1 | **Done** 2026-10-31 | Was Small | H |
+| 25 | Divider lines drawn by code in the icon and pop-up | §3.2 | **Done** 2026-10-31: removed, maintainer | Was Trivial | L |
 | 22 | UTC offset and hours visible in timestamps | §3.3 | **Done** 2026-10-31: option (c), maintainer; history squashed, UTC | Was Small | L |
 
 ---
@@ -157,6 +158,7 @@ and caches keep it even after a history rewrite.
 | Calling X-Tile's internal modules | Breaks on any package update (D1) |
 | Padding terminals to fill their slot exactly | The terminal's character-cell size hints decide; overriding them gives half a character of dead space either way |
 | A two-screen flow | Merged into one pop-up (D3, maintainer 2026-10-31) |
+| Separator lines drawn by code | The panel's own Separator item only (D16, maintainer 2026-10-31) |
 | A confirmation dialog on Reset all | It is undoable; Undo beats a confirmation for reversible actions (D11) |
 
 ## 7. Closed, kept for the reasoning

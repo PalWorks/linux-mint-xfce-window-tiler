@@ -35,7 +35,6 @@ SHARE = os.path.join(HOME, ".local/share/tiler-tray")
 SETTINGS = os.path.join(HOME, ".config/tiler-tray/settings.json")
 ICON = os.path.join(SHARE, "tiles.png")
 INK = "#e8e8e8"           # matches the other white panel icons
-RULE = "#6a6a6a"          # the panel's own separator tone
 GAPS = (0, 4, 8, 16)
 DEFAULTS = {"gap": 0, "all_workspaces": False, "last_layout": "side"}
 
@@ -43,24 +42,20 @@ DEFAULTS = {"gap": 0, "all_workspaces": False, "last_layout": "side"}
 def draw_icon(path):
     """Three panes, one tall on the left and two stacked on the right.
 
-    Same canvas as the network glyph: 96px tall at 4x panel height, with the
-    divider rule drawn into the left padding because every status icon shares
-    one panel plugin and no separator plugin can sit between them.
+    96px square, 4x panel height, so the downscale stays crisp. No divider is
+    drawn in: separators are the panel's own, set in Panel Preferences.
     """
     h = 96
-    pad = 16
-    w = h + pad
-    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    img = Image.new("RGBA", (h, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
 
     def rgb(hx):
         return tuple(int(hx[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
 
-    d.rectangle([2, int(h * 0.18), 5, int(h * 0.82)], fill=rgb(RULE))
     ink = rgb(INK)
     stroke = 6
     bw, bh = 64, 52                     # light and small, reads like text
-    x0 = pad + (h - bw) // 2
+    x0 = (h - bw) // 2
     y0 = (h - bh) // 2
     x1, y1 = x0 + bw, y0 + bh
     d.rounded_rectangle([x0, y0, x1, y1], radius=6, outline=ink, width=stroke)

@@ -1,6 +1,6 @@
 # AGENTS.md: Linux Mint XFCE Window Tiler
 
-_Last updated: 2026-10-31T05:15:42+00:00 (rule 1 widened to open menus)._
+_Last updated: 2026-10-31T05:26:41+00:00 (no drawn separators)._
 
 The behaviour contract for any coding agent working in this repo. Read
 [README.md](README.md) for what the project is, then this file before changing anything.
@@ -47,6 +47,9 @@ The behaviour contract for any coding agent working in this repo. Read
   `# noqa: BLE001` on deliberate broad excepts.
 - Layout maths stays pure in `rects()`, testable without X.
 - Plain, specific UI copy: buttons name the action, hints say what to do next.
+- **Never draw separator lines in code**: not in the icon, not as label characters, not as
+  `Gtk.Separator` between controls. Panel separators come from the panel's own Separator
+  item in Panel Preferences; inside the pop-up, use space (DECISIONS D16).
 - Doc timestamps: `date -u --iso-8601=seconds` (UTC, `+00:00`), never estimated. Commit
   with `TZ=UTC git commit ...` so commit dates carry no local offset either.
 

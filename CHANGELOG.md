@@ -2,6 +2,13 @@
 
 Timestamps ISO 8601 in UTC (`+00:00`).
 
+## 0.2.5, 2026-10-31T05:26:41+00:00
+
+### Changed
+- The panel icon no longer has a divider line drawn into its left edge, and the pop-up
+  header uses space instead of a vertical line between Select all / Clear and Reset all.
+  Separators are left to the panel's own Separator item (DECISIONS D16).
+
 ## 0.2.4, 2026-10-31T05:15:42+00:00
 
 ### Fixed
