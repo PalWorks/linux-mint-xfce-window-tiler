@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Window Tiler Tray
+Comment=Panel pop-up to tick open windows and tile them side by side, stacked, in a grid or main plus side
+Exec=/usr/bin/python3 @BIN_DIR@/tiler-tray.py
+Icon=@SHARE_DIR@/tiles.png
+Terminal=false
+StartupNotify=false
+X-GNOME-Autostart-enabled=true
+OnlyShowIn=XFCE;

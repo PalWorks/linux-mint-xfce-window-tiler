@@ -1,0 +1,77 @@
+# Changelog
+
+Timestamps ISO 8601 in UTC (`+00:00`).
+
+## 0.2.2, 2026-10-31T04:22:28+00:00
+
+Documentation and privacy release; no behaviour change. Git history squashed into one
+commit and every timestamp converted to UTC, so nothing public carries a local offset.
+
+### Added
+- ARCHITECTURE.md (components, data flow, placement arithmetic, process model, files),
+  DOMAIN.md (terms and rules), LIMITATIONS.md, PLAYBOOK.md (feature, layout, debug,
+  release, roll back).
+- `tests/test_roadmap.py`: ROADMAP.md consistency checks from the roadmap guide. It found
+  a cited §8 with no heading, now added.
+- README: Deployment and upgrades, Security and performance sections.
+- ROADMAP: recurring pre-push privacy scan (row 21), timestamp offset decision (row 22),
+  §4 Deferred table.
+
+### Changed
+- Environment details generalised to "Linux Mint 22 XFCE, X11, one 1080p monitor"; exact
+  package versions removed from the docs.
+
+## 0.2.1, 2026-10-30T20:10:41+00:00
+
+### Fixed
+- Chromium-based browsers (Edge, Chrome) and GTK header bar apps came out visibly smaller
+  than their slot, about 20px short on every side. They draw an invisible shadow inside
+  their own window and advertise it in `_GTK_FRAME_EXTENTS`, which xfwm4 ignores. The
+  engine now grows each slot by that shadow, and places again if the shadow only appears
+  after unmaximizing.
+
+### Changed
+- `xprop` (`x11-utils`) is now a dependency, checked by `install.sh`.
+
+## 0.2.0, 2026-10-30T20:00:46+00:00
+
+### Added
+- **Reset all** in the pop-up header: maximize every listed window, then minimize them all.
+  Undoable; `tiler_engine.py --reset <xid>...` on the command line.
+- Select all, Clear and Reset all are icon-only buttons with a title and description in the
+  tooltip, at least 40px square.
+- `TILER_BIN_DIR` for `install.sh` (default `~/.local/lib/tiler-tray`), dependency checks,
+  autostart entry generated from a template, `--remove` touches only its own symlinks and
+  binding.
+- `src/traykit.py` shipped in the repo.
+- LICENSE (AGPL 3.0), COMMERCIAL-LICENSE.md, CONTRIBUTING.md, SECURITY.md, SPDX headers.
+
+### Fixed
+- The pop-up flashed full height in the wrong place before jumping into position on every
+  click. It now settles size and position before it maps.
+- Too much space between checkbox and app icon: the position number moved to the right end
+  of the row.
+- Undo now clears maximized, full screen and minimized state first, so it also reverses a
+  Reset.
+
+### Changed
+- Right-click menu item renamed to "Undo last tile or reset".
+
+## 0.1.0, 2026-10-30T19:44:13+00:00
+
+First build.
+
+### Added
+- `src/tiler_engine.py`: four layouts (Side by side, Stacked, Grid, Main + side), gaps,
+  tile with unmaximize, restore, workspace move and frame allowance, one-level undo, CLI.
+- `src/tiler_picker.py`: pop-up with numbered ticks, search at 9 or more windows, layout
+  bar with live pictures, keyboard control.
+- `src/tiler-tray.py`: panel icon, right-click menu (Undo, gap, all workspaces, Quit),
+  notifications, `--show` over SIGUSR1.
+- `traykit.py` extended: `poll_seconds = 0`, `show_refresh`, `left_click_menu` and
+  `primary_click()`; no doubled separator. Backwards compatible.
+- `install.sh`, autostart entry, Super+T.
+- `tests/test_layouts.py`, 9 tests. Docs.
+
+### Fixed during the build
+- Segfault after Undo from the tray menu: rebuild deferred out of the menu handler.
