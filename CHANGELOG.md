@@ -2,6 +2,14 @@
 
 Timestamps ISO 8601 in UTC (`+00:00`).
 
+## 0.2.4, 2026-10-31T05:15:42+00:00
+
+### Fixed
+- A traykit tray could segfault if its periodic refresh landed while its dropdown was
+  open: the menu was replaced mid-use and GDK delivered events to the freed one. Seen in
+  a sibling tray on 4 dates, the last on 2026-10-31. traykit now postpones a rebuild until
+  the menu hides, and keeps the previous menu alive one more generation.
+
 ## 0.2.3, 2026-10-31T04:31:24+00:00
 
 ### Fixed

@@ -122,6 +122,10 @@ class TrayApp:
         self.last_poll = None
         self.polling = False
         self._badge_slot = 0
+        self.menu = None
+        self._retired_menu = None
+        self._menu_open = False
+        self._rebuild_pending = False
         self.icon = None
         self.backend = None
         os.makedirs(self.share_dir, exist_ok=True)
@@ -250,12 +254,25 @@ class TrayApp:
         # Drop the tooltip while the dropdown is open. A menu takes a pointer
         # grab, and any tooltip already on screen when that happens is left
         # stranded until the pointer crosses the icon again.
+        self._menu_open = True
         self._set_tooltip("")
 
     def _menu_hidden(self, _menu):
+        self._menu_open = False
         self._set_tooltip(self.tooltip(self.data) or "")
+        if self._rebuild_pending:
+            self._rebuild_pending = False
+            # give the closing menu time to finish its own events first
+            GLib.timeout_add(300, lambda: (self.rebuild(), False)[1])
 
     def rebuild(self):
+        # Never swap the menu while it is open. A poll landing while the user
+        # had the dropdown up replaced it mid-use; GDK then delivered events to
+        # the freed menu and the process segfaulted (core dumps 2026-09-12,
+        # 10-17, 10-23, 10-31). Postpone until the menu hides instead.
+        if self._menu_open:
+            self._rebuild_pending = True
+            return
         menu = Gtk.Menu()
         menu.connect("show", self._menu_shown)
         menu.connect("hide", self._menu_hidden)
@@ -270,6 +287,10 @@ class TrayApp:
             menu.append(Gtk.SeparatorMenuItem())
         menu.append(self.action_item("Quit", Gtk.main_quit))
         menu.show_all()
+        # keep the previous menu alive one more generation: GDK can still hold
+        # queued events for it, and dropping the last reference frees it
+        self._retired_menu = self.menu
+        self.menu = menu
         self._set_menu(menu)
         self._set_icon_path(self.badge_path(self.data))
         self._set_tooltip(self.tooltip(self.data))

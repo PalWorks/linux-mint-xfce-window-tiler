@@ -1,6 +1,6 @@
 # Testing
 
-_Last updated: 2026-10-31T04:31:24+00:00 (real-window layout checks)._
+_Last updated: 2026-10-31T05:15:42+00:00 (open-menu rebuild check)._
 
 ## Automated
 
@@ -77,6 +77,7 @@ each layout undone straight after. Visible area is the X window minus any drawn 
 | Undo could not bring back windows that a later step minimized | Undo now unmaximizes, leaves full screen and unminimizes before restoring |
 | A Chromium-based browser looked about 20px smaller on each side than its neighbours (maintainer report, 0.2.1) | Slot grown by the window's `_GTK_FRAME_EXTENTS` shadow (DECISIONS D15) |
 | The overlap notification listed whole window titles (0.2.3) | Names the app instead, once each |
+| A sibling traykit tray segfaulted when its 5-minute refresh hit while its dropdown was open (0.2.4) | `rebuild()` postponed while the menu is open. Self-test: a rebuild called with the menu open did not swap it and set a pending flag; after the menu hid, it swapped and kept the old menu alive |
 
 ## Not yet tested
 

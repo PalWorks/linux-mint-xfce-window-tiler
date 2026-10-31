@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-10-31T04:31:24+00:00 (rows 9, 20, 23 closed)._
+> _Last updated: 2026-10-31T05:15:42+00:00 (row 24 found and closed)._
 
 ## 0. North star: every open item, one row each
 
@@ -88,7 +88,7 @@ Priority, Size and Impact are separate columns because they answer separate ques
 
 ## 2. Next up
 
-### 2.1 Status: 0.2.3 public; every layout tried on real windows (updated 2026-10-31T04:31:24+00:00)
+### 2.1 Status: 0.2.4 public; every layout tried on real windows (updated 2026-10-31T05:15:42+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 
@@ -120,6 +120,7 @@ date and size.
 | 9 | Trial on real app windows | §3.1 | **Done** 2026-10-31: Grid on 7 by maintainer; Side by side, Stacked, Main + side on 4 real windows, minimum sizes reported correctly | Was Trivial | M |
 | 20 | Browser shadow overlapping a neighbour's edge | §3.1 | **Done** 2026-10-31: maintainer clicked next to Edge on all sides, nothing triggered | Was Trivial | L |
 | 23 | Overlap notice listed long, private window titles | §3.1 | **Done** 2026-10-31 | Was Trivial | L |
+| 24 | Tray segfault when a refresh lands with the menu open | §3.1 | **Done** 2026-10-31 | Was Small | H |
 | 22 | UTC offset and hours visible in timestamps | §3.3 | **Done** 2026-10-31: option (c), maintainer; history squashed, UTC | Was Small | L |
 
 ---
@@ -162,6 +163,8 @@ and caches keep it even after a history rewrite.
 
 - Row 8: the crash came from swapping a Gtk menu inside its own item's activate handler.
   **Never rebuild a tray menu synchronously from a menu handler; defer it.**
+- Row 24: a timed refresh replaced a menu the user had open. **A menu swap waits until the
+  menu is closed, whoever asks for it.**
 - Row 17: the window mapped before its layout bar was hidden and before it was moved.
   **Settle a pop-up's size and position before it maps.**
 
