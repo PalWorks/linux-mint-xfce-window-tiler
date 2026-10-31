@@ -373,7 +373,8 @@ def tile(xids, layout, gap=0, workspace=None):
         # terminals snap down to whole character cells, which is fine; a frame
         # bigger than its slot means the app refused to shrink
         if fw > tw + SHRINK_SLACK or fh > th + SHRINK_SLACK:
-            stuck.append(w.get_name() or _xid(w))
+            # the app name, not the title: titles run long and can be private
+            stuck.append(w.get_class_group_name() or w.get_name() or _xid(w))
     return {"tiled": [w.get_name() or "" for w in wins], "stuck": stuck, "gone": gone}
 
 

@@ -15,10 +15,10 @@ import unittest
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 ROADMAP = os.path.join(ROOT, "ROADMAP.md")
 
-# States the legend defines that may legitimately have no row at a given moment:
-# Blocked means waiting on someone outside the project, and nothing here depends on an
-# outside party; Decision empties every time the maintainer answers the last open one.
-ALLOWED_UNUSED_STATES = {"Blocked", "Decision"}
+# The guide's closed state vocabulary. The legend must define exactly these. Not every
+# state needs a row: Open, Decision or Blocked can all be empty at a given moment, so
+# "every state used" would fail on a healthy roadmap.
+GUIDE_STATES = {"Open", "Blocked", "Waiting", "Deferred", "Decision", "Recurring", "Done"}
 
 
 def read():
@@ -77,10 +77,10 @@ class RoadmapTests(unittest.TestCase):
         prio = legend.split("**Priority**")[1].split("**Impact**")[0]
         cls.legend_prios = re.findall(r"^\| \*\*(P\d)\*\* \|", prio, re.M)
 
-    def test_ledger_states_are_in_the_legend_and_every_state_is_used(self):
+    def test_ledger_states_come_from_the_guide_vocabulary(self):
+        self.assertEqual(self.legend_states, GUIDE_STATES)
         used = {state_word(r[3]) for r in self.ledger}
         self.assertTrue(used <= self.legend_states, used - self.legend_states)
-        self.assertEqual(self.legend_states - used - ALLOWED_UNUSED_STATES, set())
 
     def test_numbers_are_contiguous_and_unique(self):
         nums = [int(r[0]) for r in self.ledger]

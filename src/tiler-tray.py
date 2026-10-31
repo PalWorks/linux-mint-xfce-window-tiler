@@ -184,9 +184,13 @@ class TilerTray(TrayApp):
         self.settings["last_layout"] = layout
         save_settings(self.settings)
         if res["stuck"]:
+            names = list(dict.fromkeys(res["stuck"]))
+            who = names[0] if len(names) == 1 else \
+                "%s and %s" % (", ".join(names[:-1]), names[-1])
             notify("Some windows would not shrink",
-                   "%s has a minimum size, so it overlaps its neighbour. "
-                   "Try Grid or fewer windows." % ", ".join(res["stuck"]))
+                   "%s cannot get this small, so %s its neighbour. Main + side or "
+                   "Grid gives each window more room; Undo puts them back."
+                   % (who, "it overlaps" if len(res["stuck"]) == 1 else "they overlap"))
         if res["gone"]:
             notify("Skipped closed windows",
                    "%d window(s) closed before tiling and were left out." % res["gone"])

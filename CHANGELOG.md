@@ -2,6 +2,21 @@
 
 Timestamps ISO 8601 in UTC (`+00:00`).
 
+## 0.2.3, 2026-10-31T04:31:24+00:00
+
+### Fixed
+- The "would not shrink" notification named windows by their full titles, which run long
+  and can hold email addresses or project names. It now names the app, once each, in a
+  readable sentence, and points to Main + side, Grid or Undo.
+
+### Verified
+- All four layouts on real windows: Grid on 7 (maintainer); Side by side, Stacked and
+  Main + side on 4 real windows (Edge, Chrome, Sublime Text, an Electron IDE), each undone.
+  Main + side and Stacked fitted to the pixel apart from one IDE's minimum height; Side by
+  side at 480px each overlapped where three apps have minimum widths above 480px, and all
+  three were reported.
+- Clicking next to a tiled browser on every side does not hit its invisible shadow.
+
 ## 0.2.2, 2026-10-31T04:22:28+00:00
 
 Documentation and privacy release; no behaviour change. Git history squashed into one

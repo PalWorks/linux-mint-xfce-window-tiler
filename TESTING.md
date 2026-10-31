@@ -1,6 +1,6 @@
 # Testing
 
-_Last updated: 2026-10-31T04:22:28+00:00 (roadmap tests added)._
+_Last updated: 2026-10-31T04:31:24+00:00 (real-window layout checks)._
 
 ## Automated
 
@@ -14,7 +14,8 @@ rectangles cover the area exactly. Plus fixed expectations for side by side 3, s
 grid 3 and main + side 3 on a `(0, 33, 1920, 1047)` work area (1080p under a 33px top
 panel).
 
-`tests/test_roadmap.py`, 8 tests: every ledger state is in the legend, numbers 1 to N each
+`tests/test_roadmap.py`, 8 tests: the State legend is exactly the guide's vocabulary and
+every ledger state is in it, numbers 1 to N each
 once, pending rows above Done rows, every cited § has a heading, §0 matches the ledger on
 rows, states and sections, priorities come from a contiguous legend, no empty Problem or
 next-step cell, every linked document exists.
@@ -49,6 +50,20 @@ Test windows are plain `Gtk.Window`s titled `tilertest1` and so on, plus one
 | Undo after Reset (0.2.0) | Both visible again at their side-by-side positions, not maximized |
 | GTK header bar window, shadow 26, 26, 23, 29, beside a plain window, side by side, both starting maximized (0.2.1) | X window `934,10 1012x1099`, so the visible part is exactly `960,33 960x1047`; plain window unchanged |
 
+**Table T2: Real windows, 2026-10-31**
+
+Four real windows: Edge, Chrome, Sublime Text and an Electron IDE, from a 7-window grid,
+each layout undone straight after. Visible area is the X window minus any drawn shadow.
+
+| Layout | Result |
+|---|---|
+| Grid, 7 windows (maintainer) | Every window fills its slot, browsers included |
+| Clicks next to a tiled browser, all sides (maintainer) | Nothing triggered; the shadow does not take clicks |
+| Side by side, 480px slots | Edge 574, Chrome 500 and Sublime 518 px wide at minimum, so they overlap; all three reported as stuck. The IDE fitted exactly |
+| Stacked, 262px slots | Three fitted to the pixel; the IDE's minimum height is 270, 9px over, reported as stuck |
+| Main + side | All four exact to the pixel |
+| Undo after each | Windows returned to the state they were in before the test |
+
 ## Found and fixed during testing
 
 | Defect | Fix |
@@ -61,12 +76,12 @@ Test windows are plain `Gtk.Window`s titled `tilertest1` and so on, plus one
 | Super+T did nothing after binding | `xfsettingsd` needs a reload; added to `install.sh` |
 | Undo could not bring back windows that a later step minimized | Undo now unmaximizes, leaves full screen and unminimizes before restoring |
 | A Chromium-based browser looked about 20px smaller on each side than its neighbours (maintainer report, 0.2.1) | Slot grown by the window's `_GTK_FRAME_EXTENTS` shadow (DECISIONS D15) |
+| The overlap notification listed whole window titles (0.2.3) | Names the app instead, once each |
 
 ## Not yet tested
 
 | Gap | Next step |
 |---|---|
-| Electron and Chromium-based app windows, which often have minimum sizes | Maintainer trial; Undo puts everything back (ROADMAP row 9) |
 | Autostart after a real login | Check at the next login (ROADMAP row 10) |
 | Second monitor, HiDPI scaling, Wayland | No hardware or session for it yet (ROADMAP rows 11, 12) |
 

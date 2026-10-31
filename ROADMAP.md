@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-10-31T04:29:00+00:00 (row 22 closed: history squashed, timestamps in UTC)._
+> _Last updated: 2026-10-31T04:31:24+00:00 (rows 9, 20, 23 closed)._
 
 ## 0. North star: every open item, one row each
 
@@ -20,8 +20,6 @@ Grouped by state (Open, Decision, Waiting, Blocked, Deferred, Recurring), then b
 
 | # | Bucket | Priority | State | Size | Impact | Raised | Problem | Solution or next step |
 |---|---|---|---|---|---|---|---|---|
-| 9 | §3.1 | P2 | **Open** | T | M | 2026-10-31 | Grid on 6 real windows, Electron and Chromium-based apps included, looks right (maintainer, 2026-10-31). Side by side, Stacked and Main + side are unconfirmed on real apps, where minimum sizes can make 4 or more overlap | Maintainer tries the other three layouts with 3 to 5 real windows and uses Undo; any "would not shrink" notice feeds a layout tweak |
-| 20 | §3.1 | P3 | **Open** | T | L | 2026-10-31 | A browser's invisible shadow now overlaps its neighbour by about 20px. If the browser treats that band as its resize border, clicks just inside a neighbour's edge would resize the browser instead [Unverified] | Maintainer clicks near the shared edge after a tile; if it misbehaves, shrink the overlap to the shadow's visible part only |
 | 10 | §3.1 | P2 | **Waiting** | T | M | 2026-10-31 | Autostart is validated but not yet seen working through a real login | At the next login, check the icon is back; RUNBOOK K1 row 1 if not |
 | 11 | §3.2 | P3 | **Deferred** | S | L | 2026-10-31 | Two-monitor tiling is coded (target monitor is window 1's) but untested; the test machine has one screen | Comes back when a second monitor is attached |
 | 12 | §3.2 | P3 | **Deferred** | S | L | 2026-10-31 | HiDPI scaling and Wayland untested; the work area is read in Gdk logical pixels and wmctrl takes device pixels, and wmctrl is X11 only | Comes back when someone runs a scaled display or asks for Wayland |
@@ -90,7 +88,7 @@ Priority, Size and Impact are separate columns because they answer separate ques
 
 ## 2. Next up
 
-### 2.1 Status: 0.2.2 public; grid confirmed on real windows, other layouts pending (updated 2026-10-31T04:22:28+00:00)
+### 2.1 Status: 0.2.3 public; every layout tried on real windows (updated 2026-10-31T04:31:24+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 
@@ -100,8 +98,6 @@ date and size.
 
 | # | Item | Section | State | Size | Impact |
 |---|---|---|---|---|---|
-| 9 | Trial on real app windows | §3.1 | **Open** | T | M |
-| 20 | Browser shadow overlapping a neighbour's edge | §3.1 | **Open** | T | L |
 | 10 | Autostart seen through a real login | §3.1 | **Waiting**: next login | T | M |
 | 11 | Two-monitor tiling | §3.2 | **Deferred** | S | L |
 | 12 | HiDPI scaling | §3.2 | **Deferred** | S | L |
@@ -121,6 +117,9 @@ date and size.
 | 17 | Pop-up flashed and jumped on open | §3.1 | **Done** 2026-10-31 | Was Trivial | M |
 | 18 | Gap between checkbox and app icon | §3.2 | **Done** 2026-10-31 | Was Trivial | L |
 | 19 | Chromium-based browsers tiled smaller than their slot | §3.1 | **Done** 2026-10-31 | Was Small | M |
+| 9 | Trial on real app windows | §3.1 | **Done** 2026-10-31: Grid on 7 by maintainer; Side by side, Stacked, Main + side on 4 real windows, minimum sizes reported correctly | Was Trivial | M |
+| 20 | Browser shadow overlapping a neighbour's edge | §3.1 | **Done** 2026-10-31: maintainer clicked next to Edge on all sides, nothing triggered | Was Trivial | L |
+| 23 | Overlap notice listed long, private window titles | §3.1 | **Done** 2026-10-31 | Was Trivial | L |
 | 22 | UTC offset and hours visible in timestamps | §3.3 | **Done** 2026-10-31: option (c), maintainer; history squashed, UTC | Was Small | L |
 
 ---
@@ -129,7 +128,7 @@ date and size.
 
 ### 3.1 Reliability
 
-Rows 9, 10, 13 and 20. Row 9 matters most: Electron apps are where minimum sizes show up.
+Rows 10 and 13.
 
 ### 3.2 Features
 
