@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-10-31T05:26:41+00:00 (row 25 closed)._
+> _Last updated: 2026-10-31T05:41:00+00:00 (§1 brought up to 0.2.5; session close)._
 
 ## 0. North star: every open item, one row each
 
@@ -85,10 +85,15 @@ Priority, Size and Impact are separate columns because they answer separate ques
 |---|---|
 | Panel icon, pop-up, four layouts, undo, Super+T, autostart entry | 0.1.0, 2026-10-31 |
 | Reset all, flash-free pop-up, public repo under AGPL 3.0 or commercial | 0.2.0, 2026-10-31 |
+| Windows that draw their own shadow (Chromium browsers) fill their slot | 0.2.1, 2026-10-31 |
+| Docs to the guidelines, roadmap consistency test, UTC-only public history | 0.2.2, 2026-10-31 |
+| Overlap notice names apps, not window titles; all layouts verified on real windows | 0.2.3, 2026-10-31 |
+| No tray crash when a refresh lands while a menu is open | 0.2.4, 2026-10-31 |
+| No separator lines drawn by code | 0.2.5, 2026-10-31 |
 
 ## 2. Next up
 
-### 2.1 Status: 0.2.5 public; every layout tried on real windows (updated 2026-10-31T05:26:41+00:00)
+### 2.1 Status: 0.2.5 released (GitHub releases 0.2.2 to 0.2.5); only row 10, autostart through a real login, is waiting (updated 2026-10-31T05:41:00+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 

@@ -8,7 +8,7 @@ plus a side column.
 ![Platform: Linux Mint XFCE, X11](https://img.shields.io/badge/platform-Linux%20Mint%20XFCE%20%7C%20X11-green)
 ![Python 3](https://img.shields.io/badge/python-3-informational)
 
-_Last updated: 2026-10-31T04:22:28+00:00 (docs: ARCHITECTURE, DOMAIN, LIMITATIONS, PLAYBOOK; Deployment and Security sections)._
+_Last updated: 2026-10-31T05:41:00+00:00 (0.2.5: no drawn separator lines; releases 0.2.2 to 0.2.5 published)._
 
 **Status:** works on Linux Mint 22 XFCE (Xfce 4.18, xfwm4) under X11 with one 1080p
 monitor. Two monitors, HiDPI scaling and Wayland are untested; see
