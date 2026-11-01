@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-11-01T18:07:35+00:00 (0.3.0: row 27 closed)._
+> _Last updated: 2026-11-01T18:11:05+00:00 (session close after 0.3.0; row 21 run)._
 
 ## 0. North star: every open item, one row each
 
@@ -25,7 +25,7 @@ Grouped by state (Open, Decision, Waiting, Blocked, Deferred, Recurring), then b
 | 12 | §3.2 | P3 | **Deferred** | S | L | 2026-10-31 | HiDPI scaling and Wayland untested; the work area is read in Gdk logical pixels and wmctrl takes device pixels, and wmctrl is X11 only | Comes back when someone runs a scaled display or asks for Wayland |
 | 13 | §3.1 | P3 | **Deferred** | S | L | 2026-10-31 | Undo of a maximized window re-maximizes it, but xfwm4's remembered un-maximized size is lost, so a later un-maximize gives a full-screen-sized window | xfwm4 does not expose that size. Comes back if it bites in daily use |
 | 15 | §3.2 | P3 | **Deferred** | M | L | 2026-10-31 | Order can only be set by tick sequence; fixing a wrong order means untick and retick | Drag to reorder rows; comes back if retick proves annoying |
-| 21 | §3.3 | P1 | **Recurring** | T | H | 2026-10-31 | A home path, email, hostname or window title pushed to this public repo would expose the maintainer's setup | Before every push run AGENTS.md Review rule 6 and look at every new image. Last run 2026-11-01T17:48:27+00:00: clean |
+| 21 | §3.3 | P1 | **Recurring** | T | H | 2026-10-31 | A home path, email, hostname or window title pushed to this public repo would expose the maintainer's setup | Before every push run AGENTS.md Review rule 6 and look at every new image. Last run 2026-11-01T18:11:05+00:00: clean |
 
 **Reading the narrow columns.** Bucket is the §3 area: 3.1 Reliability, 3.2 Features, 3.3
 Privacy and release.
@@ -95,7 +95,7 @@ Priority, Size and Impact are separate columns because they answer separate ques
 
 ## 2. Next up
 
-### 2.1 Status: 0.3.0 released (GitHub releases 0.2.2 to 0.3.0); only row 10, autostart through a real login, is waiting (updated 2026-11-01T18:07:35+00:00)
+### 2.1 Status: 0.3.0 released (GitHub releases 0.2.2 to 0.3.0); session closed; only row 10, autostart through a real login (now also through `--service`), is waiting (updated 2026-11-01T18:11:05+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 
@@ -110,7 +110,7 @@ date and size.
 | 12 | HiDPI scaling | §3.2 | **Deferred** | S | L |
 | 13 | Undo loses xfwm4's un-maximized size | §3.1 | **Deferred** | S | L |
 | 15 | Drag to reorder ticked windows | §3.2 | **Deferred** | M | L |
-| 21 | Privacy and secret scan before every push | §3.3 | **Recurring**: last run 2026-11-01T17:48:27+00:00 | T | H |
+| 21 | Privacy and secret scan before every push | §3.3 | **Recurring**: last run 2026-11-01T18:11:05+00:00 | T | H |
 | 1 | Layout engine and CLI | §3.2 | **Done** 2026-10-31 | Was Medium | M |
 | 2 | traykit left-click hook, no-poll, no-refresh | §3.2 | **Done** 2026-10-31 | Was Small | M |
 | 3 | Panel icon and right-click menu | §3.2 | **Done** 2026-10-31 | Was Small | M |
