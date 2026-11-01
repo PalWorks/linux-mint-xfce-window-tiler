@@ -2,6 +2,19 @@
 
 Timestamps ISO 8601 in UTC (`+00:00`).
 
+## 0.3.0, 2026-11-01T18:07:35+00:00
+
+### Added
+- `install.sh --service`: the tray runs as the systemd user unit `tiler-tray.service`
+  and comes back 3 seconds after a crash. Quit and logout still stop it. Later plain runs
+  keep the service; `--no-service` goes back to a plain launch; `--remove` takes the unit
+  out too. Unit template in `src/tiler-tray.service` (DECISIONS D18, ROADMAP row 27).
+- Unknown `install.sh` flags now print usage and exit 2.
+
+### Docs
+- README install and upgrade steps, RUNBOOK "Restart after a crash" now uses the flag,
+  ARCHITECTURE files and process model, LIMITATIONS, TESTING table T3.
+
 ## 0.2.6, 2026-11-01T17:19:41+00:00
 
 ### Fixed

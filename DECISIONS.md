@@ -2,7 +2,7 @@
 
 Why things are the way they are. Newest last. Timestamps ISO 8601 in UTC (`+00:00`).
 
-_Last updated: 2026-11-01T17:48:27+00:00 (D17 added)._
+_Last updated: 2026-11-01T18:07:35+00:00 (D18 added)._
 
 ## D1. A custom tray, not X-Tile's own tray mode (maintainer, 2026-10-31)
 
@@ -133,3 +133,19 @@ sensitivity); any other widget, such as a check or radio item, is swapped within
 menu, kept one more rebuild, then destroyed. The `render()` hook did not change, so trays
 built on traykit need no edits. Rejected: keeping every old menu alive forever (leaks one
 menu per poll) and a full rewrite of the hooks around row objects (breaks every tray).
+
+## D18. Restart after a crash is opt-in, and sticky (maintainer, 2026-11-01)
+
+`install.sh --service` writes a systemd user unit and points the autostart entry at it,
+instead of launching the tray directly. The default install is unchanged: not every XFCE
+setup runs a systemd user session, and a plain launch keeps the tray easy to reason about.
+
+- `Restart=on-abnormal`, not `on-failure`: a crash signal restarts the tray, but Quit
+  (exit 0) does not bring back a tray the user closed, and losing the display at logout
+  (exit 1) does not loop. `StartLimitBurst=5` in 120 seconds stops a crash loop.
+- The autostart entry starts the unit, with `systemctl --user import-environment` first,
+  rather than enabling it under `graphical-session.target`: xfce4-session does not
+  activate that target, so the unit would never start at login.
+- Sticky: once the unit exists, a plain `./install.sh` keeps it, so an upgrade never
+  silently drops the restart. `--no-service` is the way back. `--remove` deletes the unit
+  only if it carries the installer's marker comment.

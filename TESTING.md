@@ -1,6 +1,6 @@
 # Testing
 
-_Last updated: 2026-11-01T17:19:41+00:00 (in-place menu rebuild check)._
+_Last updated: 2026-11-01T18:07:35+00:00 (installer --service modes)._
 
 ## Automated
 
@@ -80,11 +80,28 @@ each layout undone straight after. Visible area is the X window minus any drawn 
 | A sibling traykit tray segfaulted again with the menu closed (0.2.6) | One live menu, rows edited in place. Self-test against all three real trays' `render()`, status icon stubbed: same widgets reused when the row count holds, labels and callbacks updated, submenus kept, extra rows retired then destroyed a rebuild later, open menu untouched; tiler menu stable over repeated rebuilds |
 | A sibling traykit tray segfaulted when its 5-minute refresh hit while its dropdown was open (0.2.4) | `rebuild()` postponed while the menu is open. Self-test: a rebuild called with the menu open did not swap it and set a pending flag; after the menu hid, it swapped and kept the old menu alive |
 
+## Installer, `--service` (2026-11-01)
+
+Run on the maintainer's machine with an existing shared `traykit.py`:
+
+**Table T3: install.sh modes**
+
+| Step | Result |
+|---|---|
+| `--service` over a hand-written unit | Unit rewritten with the marker, service active, one tray process, autostart starts the unit |
+| `--no-service` | Unit removed, tray restarted by plain launch, autostart back to a plain launch |
+| Plain run after that | Stays plain |
+| `--service` again with a tray started by hand | Hand-started tray stopped, service started, one process |
+| Plain run with the unit present | Service kept |
+| `kill -KILL` on the tray | New pid 3 seconds later |
+| `--remove`, in a scratch `HOME` with `systemctl`, `xfconf-query` and `pkill` stubbed | Unit, symlinks and autostart entry removed; service stopped and daemon reloaded |
+| Unknown flag | Usage message, exit 2 |
+
 ## Not yet tested
 
 | Gap | Next step |
 |---|---|
-| Autostart after a real login | Check at the next login (ROADMAP row 10) |
+| Autostart after a real login | Check at the next login (ROADMAP row 10), with and without `--service` |
 | Second monitor, HiDPI scaling, Wayland | No hardware or session for it yet (ROADMAP rows 11, 12) |
 
 ## Re-running the live checks

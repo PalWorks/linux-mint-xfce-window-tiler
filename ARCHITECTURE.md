@@ -3,7 +3,7 @@
 How the tiler is put together and how a click becomes moved windows. Terms are defined in
 [DOMAIN.md](DOMAIN.md); the reasons behind each choice are in [DECISIONS.md](DECISIONS.md).
 
-_Last updated: 2026-11-01T17:48:27+00:00 (one live menu, D17)._
+_Last updated: 2026-11-01T18:07:35+00:00 (files and process model for --service)._
 
 ## Component diagram
 
@@ -112,6 +112,8 @@ and client size, then reapply maximized, full screen and minimized state. Delete
 - The tray has one menu for its whole life. A rebuild renders into a scratch menu and
   traykit copies it onto the live one, editing rows in place; check and radio items are
   swapped within the menu and destroyed one rebuild later (DECISIONS D17, ROADMAP row 26).
+- Installed with `--service`, the process runs under systemd as `tiler-tray.service`, which
+  starts it again 3 seconds after a crash (DECISIONS D18).
 
 ## Files
 
@@ -121,7 +123,8 @@ and client size, then reapply maximized, full screen and minimized state. Delete
 | `~/.local/share/tiler-tray/undo.json` | engine | one snapshot: xid, title, geometry, states, workspace per window |
 | `~/.local/share/tiler-tray/tiler.lock` | traykit | pid of the running tray |
 | `~/.local/share/tiler-tray/tiles.png`, `tiler-icon-{0,1}.png` | tray, traykit | the icon, and its alternating copies |
-| `~/.config/autostart/tiler-tray.desktop` | `install.sh` | autostart entry |
+| `~/.config/autostart/tiler-tray.desktop` | `install.sh` | autostart entry; with `--service` it starts the unit below |
+| `~/.config/systemd/user/tiler-tray.service` | `install.sh --service` | systemd user unit that restarts the tray after a crash (DECISIONS D18) |
 
 All writes to the two JSON files go to a temp file first, then `os.replace`.
 

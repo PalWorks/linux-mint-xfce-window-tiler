@@ -1,6 +1,6 @@
 # AGENTS.md: Linux Mint XFCE Window Tiler
 
-_Last updated: 2026-11-01T17:19:41+00:00 (traykit keeps one menu, 0.2.6)._
+_Last updated: 2026-11-01T18:07:46+00:00 (0.3.0: --service)._
 
 The behaviour contract for any coding agent working in this repo. Read
 [README.md](README.md) for what the project is, then this file before changing anything.
@@ -24,13 +24,17 @@ The behaviour contract for any coding agent working in this repo. Read
 ## Allowed actions
 
 - Edit anything under `src/`, `tests/` and the docs.
-- Run `./install.sh` (idempotent) and restart the tiler tray.
+- Run `./install.sh` (idempotent) and restart the tiler tray. If the tray runs as
+  `tiler-tray.service` (installed with `--service`), restart it with
+  `systemctl --user restart tiler-tray.service`, never pkill and a hand launch, which
+  leaves it running outside the service.
 - Open throwaway test windows titled `tilertest*` to try layouts, and close them after.
 
 ## Restricted areas
 
 | Area | Rule |
 |---|---|
+| `~/.config/systemd/user/tiler-tray.service` | Written only by `install.sh --service`; change `src/tiler-tray.service` and re-run, never edit the installed unit |
 | `src/traykit.py` | Other trays may share an installed copy. Changes stay backwards compatible, defaulting to the old behaviour |
 | Installed symlinks in `TILER_BIN_DIR` | Point into `src/`. Never edit them or replace them with copies |
 | The user's real windows | Never tile, move, reset or close them in tests without asking. Use `tilertest*` windows |

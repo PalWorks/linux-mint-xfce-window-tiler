@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 PalWorks
+#
+# Written by the window tiler's install.sh --service. Restarts the tray after a
+# crash. Started by the autostart entry once the session has a display.
+[Unit]
+Description=Window tiler tray
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 @BIN_DIR@/tiler-tray.py
+# on-abnormal: restart after a crash signal, not after Quit from the menu
+# (exit 0) or losing the display at logout (exit 1)
+Restart=on-abnormal
+RestartSec=3

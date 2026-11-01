@@ -8,7 +8,7 @@ plus a side column.
 ![Platform: Linux Mint XFCE, X11](https://img.shields.io/badge/platform-Linux%20Mint%20XFCE%20%7C%20X11-green)
 ![Python 3](https://img.shields.io/badge/python-3-informational)
 
-_Last updated: 2026-11-01T17:46:34+00:00 (0.2.6: traykit keeps one menu and edits it in place)._
+_Last updated: 2026-11-01T18:07:35+00:00 (0.3.0: install.sh --service)._
 
 **Status:** works on Linux Mint 22 XFCE (Xfce 4.18, xfwm4) under X11 with one 1080p
 monitor. Two monitors, HiDPI scaling and Wayland are untested; see
@@ -117,6 +117,7 @@ sudo apt install wmctrl x11-utils gir1.2-wnck-3.0 gir1.2-xapp-1.0 python3-pil li
 git clone https://github.com/PalWorks/linux-mint-xfce-window-tiler.git
 cd linux-mint-xfce-window-tiler
 ./install.sh            # symlinks, autostart, Super+T, starts the tray
+./install.sh --service  # the same, plus a restart after any crash (recommended)
 ./install.sh --remove   # undoes all of that and stops the tray
 ```
 
@@ -128,6 +129,12 @@ cd linux-mint-xfce-window-tiler
 3. Binds Super+T, unless Super+T is already bound to something else, and reloads
    `xfsettingsd` so the new key is live.
 4. Starts the tray.
+
+With `--service` it also writes the systemd user unit `~/.config/systemd/user/tiler-tray.service`,
+points the autostart entry at it, and starts the tray through it. systemd then brings the
+tray back 3 seconds after a crash; Quit from the menu and logging out stop it as usual.
+Later runs of `./install.sh` keep the service; `./install.sh --no-service` goes back to a
+plain launch.
 
 If you already run other traykit-based trays, point `TILER_BIN_DIR` at their folder to
 share one `traykit.py`. The installer will not overwrite a real `traykit.py`, and refuses
@@ -142,6 +149,14 @@ pkill -f "^/usr/bin/python3 $BIN/tiler-tray.py"
 ```
 
 Keep the `^`: unanchored, the pattern also matches the shell running the command.
+
+Installed with `--service`, use systemd instead:
+
+```bash
+systemctl --user restart tiler-tray.service
+systemctl --user stop tiler-tray.service
+journalctl --user -u tiler-tray.service     # starts, crashes and restarts
+```
 
 Always use `/usr/bin/python3`. A Homebrew or pyenv `python3` earlier on `PATH` usually
 has no `gi` bindings.
@@ -181,7 +196,7 @@ This is a per-user desktop utility; there is no server and nothing to deploy bey
 cd linux-mint-xfce-window-tiler
 git pull                      # the installed symlinks point into this clone
 pkill -f "^/usr/bin/python3 $HOME/.local/lib/tiler-tray/tiler-tray.py"
-./install.sh                  # restarts the tray and picks up any new files
+./install.sh                  # restarts the tray and picks up any new files; keeps --service
 ```
 
 To pin a version, `git checkout vX.Y.Z` instead of `git pull`. Rolling back is the same
@@ -216,13 +231,14 @@ SECURITY.md          what it touches, how to report a problem
 CONTRIBUTING.md      how to contribute, and the licence grant that requires
 COMMERCIAL-LICENSE.md  the paid licence alternative to AGPL
 LICENSE              GNU AGPL 3.0
-install.sh           wire into the machine, or --remove
+install.sh           wire into the machine; --service, --no-service, --remove
 src/
   tiler-tray.py      tray app
   tiler_picker.py    pop-up
   tiler_engine.py    maths and window moves
   traykit.py         status icon scaffolding
   tiler-tray.desktop autostart template
+  tiler-tray.service systemd user unit template, for install.sh --service
 tests/
   test_layouts.py    layout maths, no X needed
   test_roadmap.py    ROADMAP.md stays consistent
