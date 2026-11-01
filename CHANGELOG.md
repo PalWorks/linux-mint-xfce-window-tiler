@@ -2,6 +2,17 @@
 
 Timestamps ISO 8601 in UTC (`+00:00`).
 
+## 0.2.6, 2026-11-01T17:19:41+00:00
+
+### Fixed
+- A sibling traykit tray segfaulted again on 2026-11-01, after the 0.2.4 guard: a new
+  menu was still swapped in on every poll, and GDK could still hold events for the old
+  one. traykit now hands the panel one menu for the life of the process and edits its
+  rows in place on each rebuild (labels, action callbacks, sensitivity, submenus). Rows
+  that cannot be edited in place, such as check and radio items, are swapped inside the
+  same menu, kept alive one more rebuild, then destroyed. The `render()` hook is
+  unchanged, so existing trays need no edits.
+
 ## 0.2.5, 2026-10-31T05:26:41+00:00
 
 ### Changed

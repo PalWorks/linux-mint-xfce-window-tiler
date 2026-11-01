@@ -13,6 +13,8 @@ Everything awkward about XFCE status icons is handled here once:
   - a single instance flock, opened "a+" so a refused second launch cannot
     truncate the winner's pid
   - polling on a worker thread so the menu never blocks on IO
+  - one menu for the life of the process, its rows edited in place on each
+    poll, because swapping in a new menu crashed GDK (see rebuild)
 
 Must run under /usr/bin/python3, which is where the gi bindings live.
 """
@@ -122,14 +124,20 @@ class TrayApp:
         self.last_poll = None
         self.polling = False
         self._badge_slot = 0
-        self.menu = None
-        self._retired_menu = None
+        self._retired = []
+        self._retiring = []
         self._menu_open = False
         self._rebuild_pending = False
         self.icon = None
         self.backend = None
         os.makedirs(self.share_dir, exist_ok=True)
         self._build_icon()
+        # the one menu this process ever hands the panel, see rebuild
+        self.menu = Gtk.Menu()
+        self.menu.connect("show", self._menu_shown)
+        self.menu.connect("hide", self._menu_hidden)
+        self._set_menu(self.menu)
+        self.rebuild()                  # header and actions until the first poll
         self.refresh()
         if self.poll_seconds > 0:
             GLib.timeout_add_seconds(self.poll_seconds, self._tick)
@@ -237,11 +245,15 @@ class TrayApp:
         lbl.set_markup(markup)
         item.add(lbl)
         item.set_sensitive(sensitive)
+        item._tk = ("label", markup)    # lets rebuild edit this row in place
         return item
 
     def action_item(self, text, callback):
         item = Gtk.MenuItem(label=text)
-        item.connect("activate", lambda _w: callback())
+        item._tk = ("action", text)
+        item._tk_cb = callback
+        # looked up at click time, since an in-place update swaps it
+        item.connect("activate", lambda w: w._tk_cb())
         return item
 
     def header_item(self, title):
@@ -273,25 +285,32 @@ class TrayApp:
         if self._menu_open:
             self._rebuild_pending = True
             return
-        menu = Gtk.Menu()
-        menu.connect("show", self._menu_shown)
-        menu.connect("hide", self._menu_hidden)
-        self.render(menu, self.data, self.error)
-        menu.append(Gtk.SeparatorMenuItem())
+        # Render into a scratch menu that is never shown, then copy it onto the
+        # live one. Swapping a new menu in every poll was the remaining crash:
+        # GDK still held events for the dropped menu (segfault 2026-11-01, after
+        # the open-menu guard above). The live menu now lives as long as the
+        # process and its rows are edited in place.
+        fresh = Gtk.Menu()
+        self.render(fresh, self.data, self.error)
+        fresh.append(Gtk.SeparatorMenuItem())
         extras = self.extra_actions()
         if self.show_refresh:
-            menu.append(self.action_item("Refresh now", lambda: self.refresh(force=True)))
+            fresh.append(self.action_item("Refresh now", lambda: self.refresh(force=True)))
         for text, cb in extras:
-            menu.append(self.action_item(text, cb))
+            fresh.append(self.action_item(text, cb))
         if self.show_refresh or extras:
-            menu.append(Gtk.SeparatorMenuItem())
-        menu.append(self.action_item("Quit", Gtk.main_quit))
-        menu.show_all()
-        # keep the previous menu alive one more generation: GDK can still hold
-        # queued events for it, and dropping the last reference frees it
-        self._retired_menu = self.menu
-        self.menu = menu
-        self._set_menu(menu)
+            fresh.append(Gtk.SeparatorMenuItem())
+        fresh.append(self.action_item("Quit", Gtk.main_quit))
+        fresh.show_all()
+        # Rows that cannot be edited in place are swapped out. Keep those alive
+        # one more generation in case GDK still holds events for them, and only
+        # then destroy them.
+        for w in self._retired:
+            w.destroy()
+        self._retiring = []
+        self._sync(self.menu, fresh)
+        self._retired = self._retiring
+        fresh.destroy()
         self._set_icon_path(self.badge_path(self.data))
         self._set_tooltip(self.tooltip(self.data))
         # Re-apply the label on the next main loop pass. Changing the icon name
@@ -300,6 +319,56 @@ class TrayApp:
         text = self.label(self.data)
         if text is not None:
             GLib.idle_add(self._set_label, text)
+
+    @staticmethod
+    def _kind(item):
+        """Row kind that can be edited in place, or None for any other widget."""
+        if type(item) is Gtk.SeparatorMenuItem:
+            return "sep"
+        tk = getattr(item, "_tk", None)
+        return tk[0] if tk else None
+
+    def _sync(self, live, fresh):
+        """Make `live` show what `fresh` holds. A row whose kind matches is
+        edited in place; any other row is moved across from `fresh`, and the
+        one it replaces is retired."""
+        old = live.get_children()
+        new = fresh.get_children()
+        for i, n in enumerate(new):
+            o = old[i] if i < len(old) else None
+            kind = self._kind(n)
+            if o is not None and kind is not None and kind == self._kind(o):
+                self._update(o, n, kind)
+                continue
+            if o is not None:
+                live.remove(o)
+                self._retiring.append(o)
+            fresh.remove(n)
+            live.insert(n, i)
+        for o in old[len(new):]:
+            live.remove(o)
+            self._retiring.append(o)
+
+    def _update(self, o, n, kind):
+        if kind == "label" and o._tk != n._tk:
+            o.get_child().set_markup(n._tk[1])
+        elif kind == "action":
+            if o._tk != n._tk:
+                o.set_label(n._tk[1])
+            o._tk_cb = n._tk_cb
+        if kind != "sep":
+            o._tk = n._tk
+        if o.get_sensitive() != n.get_sensitive():
+            o.set_sensitive(n.get_sensitive())
+        osub, nsub = o.get_submenu(), n.get_submenu()
+        if osub is not None and nsub is not None:
+            self._sync(osub, nsub)
+        elif nsub is not None:
+            n.set_submenu(None)
+            o.set_submenu(nsub)
+        elif osub is not None:
+            o.set_submenu(None)
+            self._retiring.append(osub)
 
     def extra_actions(self):
         """List of (label, callback) added after Refresh now."""

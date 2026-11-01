@@ -1,6 +1,6 @@
 # AGENTS.md: Linux Mint XFCE Window Tiler
 
-_Last updated: 2026-10-31T05:26:41+00:00 (no drawn separators)._
+_Last updated: 2026-11-01T17:19:41+00:00 (traykit keeps one menu, 0.2.6)._
 
 The behaviour contract for any coding agent working in this repo. Read
 [README.md](README.md) for what the project is, then this file before changing anything.
@@ -58,8 +58,11 @@ The behaviour contract for any coding agent working in this repo. Read
 1. **Never swap a tray menu while it is open or closing**, neither from one of its own
    item handlers nor from a poll that lands while the user has it open. The old menu is
    freed, GDK dispatches its pending events to freed memory, the process segfaults.
-   traykit postpones `rebuild()` until the menu hides and keeps the previous menu alive
-   one generation; `_rebuild_soon()` in the tray covers the item-handler case.
+   traykit postpones `rebuild()` until the menu hides; `_rebuild_soon()` in the tray covers
+   the item-handler case. Since 0.2.6 the menu itself is never swapped at all: one menu
+   lives as long as the process, `render()` fills a scratch menu, and `_sync()` copies it
+   onto the live one in place. Build rows with `label_item()` and `action_item()` so
+   they can be edited in place; other widgets are swapped and retired one generation.
 2. **Never show the pop-up before its size and position are settled.** Calling
    `show_all()` on the window, then hiding the layout bar and moving it, flashed a
    full-height window in the wrong place on every click. Show the children, settle, move,
