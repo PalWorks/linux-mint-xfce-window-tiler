@@ -13,6 +13,11 @@ Timestamps ISO 8601 in UTC (`+00:00`).
   same menu, kept alive one more rebuild, then destroyed. The `render()` hook is
   unchanged, so existing trays need no edits.
 
+### Docs
+- DECISIONS D17 records why. RUNBOOK gains "Restart after a crash", an optional systemd
+  user unit. ROADMAP closes row 26 and opens row 27, whether `install.sh` should offer
+  that unit.
+
 ## 0.2.5, 2026-10-31T05:26:41+00:00
 
 ### Changed

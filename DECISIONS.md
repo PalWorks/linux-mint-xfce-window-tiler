@@ -2,7 +2,7 @@
 
 Why things are the way they are. Newest last. Timestamps ISO 8601 in UTC (`+00:00`).
 
-_Last updated: 2026-10-31T05:26:41+00:00 (D16 added)._
+_Last updated: 2026-11-01T17:48:27+00:00 (D17 added)._
 
 ## D1. A custom tray, not X-Tile's own tray mode (maintainer, 2026-10-31)
 
@@ -117,3 +117,19 @@ The maintainer prefers the panel's own separators, added in Panel Preferences, a
 other kind of line. So the icon is drawn without one, and the pop-up header separates
 Reset all from Select all and Clear by space, not a line. Any future separator goes through
 the panel's Separator item only.
+
+## D17. One tray menu for the life of the process (2026-11-01)
+
+0.2.4 stopped traykit from swapping the menu while it was open, and kept the previous menu
+alive one generation. A sibling tray still segfaulted inside GTK on 2026-11-01 with its
+menu closed: every rebuild still handed the panel a new menu and let an older one go while
+GDK could hold events for it.
+
+traykit now creates one `Gtk.Menu` when the tray starts and hands it to the status icon
+once. `rebuild()` lets the tray's `render()` fill a scratch menu that is never shown, then
+`_sync()` copies it onto the live menu row by row: rows made with `label_item()` and
+`action_item()`, separators and submenus are edited in place (text, click handler,
+sensitivity); any other widget, such as a check or radio item, is swapped within the same
+menu, kept one more rebuild, then destroyed. The `render()` hook did not change, so trays
+built on traykit need no edits. Rejected: keeping every old menu alive forever (leaks one
+menu per poll) and a full rewrite of the hooks around row objects (breaks every tray).

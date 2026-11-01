@@ -11,7 +11,7 @@
 > Timestamps are ISO 8601 to the second, in UTC (`+00:00`), as for every public repo here. Every row so far was raised on
 > 2026-10-31, before the first commit, so Raised dates come from that session.
 >
-> _Last updated: 2026-10-31T05:41:00+00:00 (§1 brought up to 0.2.5; session close)._
+> _Last updated: 2026-11-01T17:48:27+00:00 (0.2.6: rows 26 and 27, §1 and §2.1)._
 
 ## 0. North star: every open item, one row each
 
@@ -25,7 +25,8 @@ Grouped by state (Open, Decision, Waiting, Blocked, Deferred, Recurring), then b
 | 12 | §3.2 | P3 | **Deferred** | S | L | 2026-10-31 | HiDPI scaling and Wayland untested; the work area is read in Gdk logical pixels and wmctrl takes device pixels, and wmctrl is X11 only | Comes back when someone runs a scaled display or asks for Wayland |
 | 13 | §3.1 | P3 | **Deferred** | S | L | 2026-10-31 | Undo of a maximized window re-maximizes it, but xfwm4's remembered un-maximized size is lost, so a later un-maximize gives a full-screen-sized window | xfwm4 does not expose that size. Comes back if it bites in daily use |
 | 15 | §3.2 | P3 | **Deferred** | M | L | 2026-10-31 | Order can only be set by tick sequence; fixing a wrong order means untick and retick | Drag to reorder rows; comes back if retick proves annoying |
-| 21 | §3.3 | P1 | **Recurring** | T | H | 2026-10-31 | A home path, email, hostname or window title pushed to this public repo would expose the maintainer's setup | Before every push run AGENTS.md Review rule 6 and look at every new image. Last run 2026-10-31T04:22:28+00:00: clean |
+| 27 | §3.1 | P3 | **Decision** | S | M | 2026-11-01 | A crash still leaves the icon gone until the next login or a manual restart | Recommendation: `install.sh --service` installs the RUNBOOK systemd user unit (`Restart=on-abnormal`) and points the autostart entry at it; default install unchanged. Tried on the maintainer's machine 2026-11-01: back 3 seconds after `kill -KILL` |
+| 21 | §3.3 | P1 | **Recurring** | T | H | 2026-10-31 | A home path, email, hostname or window title pushed to this public repo would expose the maintainer's setup | Before every push run AGENTS.md Review rule 6 and look at every new image. Last run 2026-11-01T17:48:27+00:00: clean |
 
 **Reading the narrow columns.** Bucket is the §3 area: 3.1 Reliability, 3.2 Features, 3.3
 Privacy and release.
@@ -90,10 +91,11 @@ Priority, Size and Impact are separate columns because they answer separate ques
 | Overlap notice names apps, not window titles; all layouts verified on real windows | 0.2.3, 2026-10-31 |
 | No tray crash when a refresh lands while a menu is open | 0.2.4, 2026-10-31 |
 | No separator lines drawn by code | 0.2.5, 2026-10-31 |
+| One tray menu for the life of the process, rows edited in place | 0.2.6, 2026-11-01 |
 
 ## 2. Next up
 
-### 2.1 Status: 0.2.5 released (GitHub releases 0.2.2 to 0.2.5); only row 10, autostart through a real login, is waiting (updated 2026-10-31T05:41:00+00:00)
+### 2.1 Status: 0.2.6 tagged (GitHub releases 0.2.2 to 0.2.5; 0.2.6 release left to the maintainer); row 10 waiting on a real login, row 27 waiting on a maintainer decision (updated 2026-11-01T17:48:27+00:00)
 
 ### 2.2 The ledger: every backlog item, pending first, done at the bottom
 
@@ -108,7 +110,8 @@ date and size.
 | 12 | HiDPI scaling | §3.2 | **Deferred** | S | L |
 | 13 | Undo loses xfwm4's un-maximized size | §3.1 | **Deferred** | S | L |
 | 15 | Drag to reorder ticked windows | §3.2 | **Deferred** | M | L |
-| 21 | Privacy and secret scan before every push | §3.3 | **Recurring**: last run 2026-10-31T04:29:00+00:00 | T | H |
+| 27 | Optional systemd unit that restarts the tray after a crash | §3.1 | **Decision**: maintainer | S | M |
+| 21 | Privacy and secret scan before every push | §3.3 | **Recurring**: last run 2026-11-01T17:48:27+00:00 | T | H |
 | 1 | Layout engine and CLI | §3.2 | **Done** 2026-10-31 | Was Medium | M |
 | 2 | traykit left-click hook, no-poll, no-refresh | §3.2 | **Done** 2026-10-31 | Was Small | M |
 | 3 | Panel icon and right-click menu | §3.2 | **Done** 2026-10-31 | Was Small | M |
@@ -128,6 +131,7 @@ date and size.
 | 24 | Tray segfault when a refresh lands with the menu open | §3.1 | **Done** 2026-10-31 | Was Small | H |
 | 25 | Divider lines drawn by code in the icon and pop-up | §3.2 | **Done** 2026-10-31: removed, maintainer | Was Trivial | L |
 | 22 | UTC offset and hours visible in timestamps | §3.3 | **Done** 2026-10-31: option (c), maintainer; history squashed, UTC | Was Small | L |
+| 26 | Tray segfault with the menu closed: a new menu was swapped in on every rebuild | §3.1 | **Done** 2026-11-01: 0.2.6, one menu edited in place | Was Small | H |
 
 ---
 
@@ -135,7 +139,7 @@ date and size.
 
 ### 3.1 Reliability
 
-Rows 10 and 13.
+Rows 10, 13 and 27 (rows 8, 24 and 26, the tray crashes, closed).
 
 ### 3.2 Features
 
@@ -172,6 +176,9 @@ and caches keep it even after a history rewrite.
   **Never rebuild a tray menu synchronously from a menu handler; defer it.**
 - Row 24: a timed refresh replaced a menu the user had open. **A menu swap waits until the
   menu is closed, whoever asks for it.**
+- Row 26: even with row 24 fixed, a sibling tray segfaulted with its menu closed: each
+  rebuild still dropped the old menu while GDK could hold events for it. **Never swap the
+  menu at all; keep one and edit its rows in place** (DECISIONS D17).
 - Row 17: the window mapped before its layout bar was hidden and before it was moved.
   **Settle a pop-up's size and position before it maps.**
 
